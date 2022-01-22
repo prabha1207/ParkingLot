@@ -82,14 +82,20 @@ public class ParkingLotServiceImpl implements IParkingLotService {
 		return str;
 	}
 	@Override
-	public void addRandomVehicle(int numberOfVechle, ParkingLot parkingLot) {
+	public void addRandomVehicle(int vechicleId,int ticketId,int numberOfVechle, ParkingLot parkingLot) {
 		for(int i=1;i<=numberOfVechle;i++)
 		{
 			try
 			{
 				Slot availableSlot = getFirstAvailableSlots(parkingLot);
-				Vehicle vehicle = new Vehicle(i,getRandomPlateNumber(),getRandomColor());
+				Vehicle vehicle = new Vehicle(vechicleId,getRandomPlateNumber(),getRandomColor());
 				parkVehicleInSlot(availableSlot,vehicle);
+				DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+				Date date = new Date();
+				Ticket ticket = new Ticket(ticketId, vehicle.getPlateNo(), dateFormat.format(date) , vehicle.getColor());
+				vehicle.setTicket(ticket);
+				ticketId++;
+				vechicleId++;
 			}
 			catch(SlotException e)
 			{
@@ -139,8 +145,9 @@ public class ParkingLotServiceImpl implements IParkingLotService {
 				slot.setAvailable(true);
 				
 				DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-				Date date = new Date();
-				Ticket ticket = new Ticket(id, dateFormat.format(date));
+				Date exitTime = new Date();
+				Ticket ticket = slot.getVechle().getTicket();
+				ticket.setExitTime(dateFormat.format(exitTime));
 				return ticket;
 			}
 		}
@@ -152,18 +159,19 @@ public class ParkingLotServiceImpl implements IParkingLotService {
 	}
 
 	@Override
-	public Ticket parkCar(String registerationNumber, String colorOfCar, ParkingLot parkingLot) {
+	public Ticket parkCar(int vechicleId,int ticketId,String registerationNumber, String colorOfCar, ParkingLot parkingLot) {
 		
 		try {
 			Slot availableSlot = getFirstAvailableSlots(parkingLot);
-			int i=(int)Math.random();
-			Vehicle vehicle = new Vehicle(i,registerationNumber,colorOfCar);
+			Vehicle vehicle = new Vehicle(vechicleId,registerationNumber,colorOfCar);
 			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 			Date date = new Date();
 			//System.out.println(dateFormat.format(date));
-			Ticket ticket = new Ticket(id, registerationNumber, dateFormat.format(date) , colorOfCar);
+			Ticket ticket = new Ticket(ticketId, registerationNumber, dateFormat.format(date) , colorOfCar);
+			vehicle.setTicket(ticket);
 			//System.out.println(ticket.getEntryTime());
-			id++;
+			ticketId++;
+			vechicleId++;
 			parkVehicleInSlot(availableSlot,vehicle);
 			return ticket;
 		}catch(Exception e)

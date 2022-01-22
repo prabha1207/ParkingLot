@@ -68,17 +68,23 @@ public class Search{
 			System.out.println("Not available any car of that color ");
 		}
 	}
-	public void displayTicket(TicketRepo t2) {
+	public void displayTicket(TicketRepo t2,String registerationNumber) {
 		for(Ticket t: t2.getAllTicket())
 		{
+			if(registerationNumber==t.getVechleNo())
+			{
 			System.out.println(t.getColor()+" "+t.getVechleNo()+" "+t.getEntryTime());
+			break;
+			}
 		}
 	}
 	public void displayTicketWithExitTime(TicketRepo t2)
 	{
 		for(Ticket t: t2.getAllTicketWithExitTime())
 		{
+			 
 			System.out.println(t.getExitTime());
+			
 		}
 	}
 	
@@ -86,15 +92,12 @@ public class Search{
 	{
 		for(Slot slot : parkingLot.getAllSlots())
 		{
-			if(!slot.isAvailable())
+			if(!slot.isAvailable() && slot.getSerialNo()==slotNo)
 			{
 				//System.out.println(slot.getVechle().getPlateNo() + " | " + slot.getVechle().getColor()+" | "+slot.getSerialNo());
 				
-				if(slot.getSerialNo()==slotNo)
-				{
-					System.out.print(slot.getVechle().getPlateNo()+" "+slot.getVechle().getColor()+" ");
-					break;
-				}
+				System.out.print(slot.getVechle().getPlateNo()+" "+slot.getVechle().getColor()+" ");
+				break;
 			}
 		}
 		

@@ -1,5 +1,8 @@
 package driver;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 
 import exception.SlotException;
@@ -12,9 +15,12 @@ import services.IParkingLotService;
 import services.ParkingLotServiceImpl;
 
 public class Main {
-	
+	static int ticketId=1;
+	static int vechicleId=1;
 	public static void main(String[] args)
 	{
+		
+		
 		Search search=new Search();
 		Ticket t1=new Ticket();
 		TicketRepo t2=new TicketRepo();
@@ -41,7 +47,7 @@ public class Main {
 				break;
 			}
 		}
-		parkingLotService.addRandomVehicle(m, parkingLot);
+		parkingLotService.addRandomVehicle(vechicleId,ticketId,m, parkingLot);
 		
 		
 		
@@ -64,10 +70,10 @@ public class Main {
 					String registerationNumber=sc.next();
 					System.out.println("enter color of car");
 					String colorOfCar=sc.next();
-					t1=parkingLotService.parkCar(registerationNumber,colorOfCar,parkingLot);
+					t1=parkingLotService.parkCar(vechicleId,ticketId,registerationNumber,colorOfCar,parkingLot);
 					t2.allTicket.add(t1);
 					System.out.println("display ticket with entry time");
-					search.displayTicket(t2);
+					search.displayTicket(t2,registerationNumber);
 					System.out.println();
 					System.out.println("display all vechile");
 					parkingLotService.displayAllParkedVehicle(parkingLot);
@@ -93,7 +99,10 @@ public class Main {
 				search.displayCarDetailsBySlotNo(parkingLot, removeSlotNumber);
 				t1=parkingLotService.removeParkedVehicle(removeSlotNumber,parkingLot);
 				t2.allTicketWithExitTime.add(t1);
-				search.displayTicketWithExitTime(t2);
+				DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+				Date exitTime = new Date();
+				System.out.println(dateFormat.format(exitTime));
+				//search.displayTicketWithExitTime(t2);
 				System.out.println();
 			}
 			catch(SlotException e)
